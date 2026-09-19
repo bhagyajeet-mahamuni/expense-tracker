@@ -1,0 +1,67 @@
+services:
+
+  expense-tracker:
+    image: mongo:7
+    container_name: mongodb-container
+    restart: always
+
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+
+    volumes:
+      - mongo-db:/data/db
+
+    networks:
+      - etrack-network
+
+#=======================================================
+
+  backend:
+    build:
+      context: ./backend
+
+    container_name: backend-container
+
+    ports:
+      - "5000:5000"
+
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - JWT_SECRET=${JWT_SECRET}
+
+    depends_on:
+      - expense-tracker
+
+    networks:
+      - etrack-network
+
+#========================================================
+
+
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: frontend-container
+
+    ports:
+      - "4173:4173"
+
+    environment:
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+
+    depends_on:
+      - backend
+
+    networks:
+      - etrack-network
+
+
+volumes:
+  mongo-db:
+
+
+networks:
+  etrack-network:
