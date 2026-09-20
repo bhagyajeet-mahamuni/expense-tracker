@@ -58,7 +58,12 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: self-hosted
 
+
     steps:
+      - name: Checkout the code
+        run: actions/checkout@v4
+
+
       - name: Deploy Application
         run: |
           cd ~/Docker-Practice/expense-tracker
