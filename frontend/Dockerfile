@@ -29,6 +29,10 @@ RUN npm install    ##  It stores files inside /app/node_modules
 
 COPY . . 
 
+ARG VITE_API_BASE_URL
+
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 RUN npm run build  ## It stores file in /app/dist folder
 
 #=======================================Stage 2
