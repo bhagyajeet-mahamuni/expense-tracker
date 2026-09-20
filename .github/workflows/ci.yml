@@ -50,3 +50,18 @@ jobs:
 
       - name: Push frontend image
         run: docker push bhagyajeet/expense-tracker-frontend-ci-ga:latest
+
+ ###===============================================================
+
+  deploy:
+    needs: test-and-build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy Application
+        run: |
+          cd ~/Docker-Practice/expense-tracker
+          docker compose pull
+          docker compose up -d
+          docker compose ps
