@@ -16,6 +16,13 @@ services:
     networks:
       - etrack-network
 
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 })' localhost:27017/test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
 #=======================================================
 
   backend:
@@ -31,7 +38,8 @@ services:
       - JWT_SECRET=${JWT_SECRET}
 
     depends_on:
-      - expense-tracker
+      expense-tracker:
+        condition: service_healthy
 
     networks:
       - etrack-network
